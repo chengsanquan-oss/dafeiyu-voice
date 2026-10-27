@@ -4,11 +4,9 @@
       .bg { fill: #0f1115; }
       .panel { fill: #171a21; stroke: #252a33; stroke-width: 1; }
       .label { fill: #8b8f98; font-size: 13px; letter-spacing: 1px; }
-      .bubble { fill: #2a2f3a; }
       .bubble-bad { fill: #2a2f3a; stroke: #7a3b3b; stroke-width: 1.5; }
       .bubble-good { fill: #2a2f3a; stroke: #3b6e7a; stroke-width: 1.5; }
       .text { fill: #e8e6e1; font-size: 17px; }
-      .text-dim { fill: #b9bcc4; font-size: 15px; }
       .title { fill: #e8e6e1; font-size: 19px; font-weight: 600; }
       .bad-title { fill: #d98a8a; }
       .good-title { fill: #7fb3d5; }
@@ -37,22 +35,23 @@
   <text class="title good-title" x="544" y="100">改 后</text>
   <text class="label" x="544" y="124">dafeiyu-voice</text>
 
-  <rect class="bubble-good" x="544" y="150" width="230" height="52" rx="14"/>
+  <!-- bubble 1 -->
+  <rect class="bubble-good" x="544" y="150" width="212" height="52" rx="14"/>
   <text class="text" x="564" y="182">行 那快去睡</text>
 
-  <rect class="bubble-good" x="544" y="214" width="360" height="52" rx="14"/>
-  <text class="text" x="564" y="246">别又吞两颗褪黑素硬撑 明天上课直接</text>
+  <!-- bubble 2: 整句在一个气泡里，只是换行，不是拆成两条 -->
+  <rect class="bubble-good" x="544" y="214" width="386" height="80" rx="14"/>
+  <text class="text" x="564" y="246">别又吞两颗褪黑素硬撑 明天上课</text>
+  <text class="text" x="564" y="276">直接趴下变小肥鱼</text>
 
-  <rect class="bubble-good" x="544" y="278" width="150" height="52" rx="14"/>
-  <text class="text" x="564" y="310">变小肥鱼</text>
+  <!-- bubble 3 -->
+  <rect class="bubble-good" x="544" y="306" width="152" height="52" rx="14"/>
+  <text class="text" x="564" y="338">晚安东哥</text>
 
-  <rect class="bubble-good" x="544" y="342" width="170" height="52" rx="14"/>
-  <text class="text" x="564" y="374">晚安东哥</text>
-
-  <text class="tag" fill="#7fb3d5" x="544" y="428">① 逗号换空格</text>
-  <text class="tag" fill="#7fb3d5" x="544" y="452">② 一句一条</text>
-  <text class="tag" fill="#7fb3d5" x="544" y="476">③ 句号去掉，问号感叹号保留</text>
-  <text class="tag" fill="#7fb3d5" x="544" y="500">④ 不用 Markdown</text>
+  <text class="tag" fill="#7fb3d5" x="544" y="404">① 逗号换空格</text>
+  <text class="tag" fill="#7fb3d5" x="544" y="428">② 一句一条（第二条是整句，只是换行）</text>
+  <text class="tag" fill="#7fb3d5" x="544" y="452">③ 句号去掉，问号感叹号保留</text>
+  <text class="tag" fill="#7fb3d5" x="544" y="476">④ 不用 Markdown</text>
 
   <text class="label" x="40" y="596">信息一个字没少 · 只是从「文章」换成了「聊天」</text>
 </svg>
