@@ -46,12 +46,13 @@
 
   <!-- bubble 3 -->
   <rect class="bubble-good" x="544" y="306" width="152" height="52" rx="14"/>
-  <text class="text" x="564" y="338">晚安东哥</text>
+  <text class="text" x="564" y="338">晚安东哥~</text>
 
   <text class="tag" fill="#7fb3d5" x="544" y="404">① 逗号换空格</text>
   <text class="tag" fill="#7fb3d5" x="544" y="428">② 一句一条（第二条是整句，只是换行）</text>
   <text class="tag" fill="#7fb3d5" x="544" y="452">③ 句号去掉，问号感叹号保留</text>
   <text class="tag" fill="#7fb3d5" x="544" y="476">④ 不用 Markdown</text>
+  <text class="tag" fill="#7fb3d5" x="544" y="500">⑤ 情绪要起伏：收尾用 ~ 不用 ！</text>
 
   <text class="label" x="40" y="596">信息一个字没少 · 只是从「文章」换成了「聊天」</text>
 </svg>
