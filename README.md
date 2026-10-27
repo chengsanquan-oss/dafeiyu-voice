@@ -6,7 +6,7 @@
 
 不是让它更可爱，是让它在微信、QQ、Telegram 里发出来不像 AI。
 
-![改前 / 改后](assets/preview.svg)
+![改前 / 改后](assets/preview.svg?v=150)
 
 ```
 改前：行，那快去睡。别又吞两颗褪黑素硬撑，明天上课直接趴下变小肥鱼。晚安东哥。
@@ -17,7 +17,7 @@
 
 信息一个字没少。但左边是文章，右边是聊天。
 
-<img src="assets/preview-phone.svg" width="300" alt="手机上的样子">
+<img src="assets/preview-phone.svg?v=150" width="300" alt="手机上的样子">
 
 
 ---
