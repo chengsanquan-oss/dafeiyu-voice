@@ -26,6 +26,7 @@ Four hard rules, all **typography**, none about personality:
 | 3 | Drop the trailing `。`, keep `？！…` | A full stop reads like a memo. Question and exclamation marks carry tone |
 | 4 | No Markdown | `**bold**` and `- lists` either don't render in chat or look wildly out of place |
 | 5 | **Use `？！…` on purpose** | Rules 1–4 are all subtraction. Subtract everything and you get flat — a voice with no face. Question marks hand the ball back, exclamations mean you actually care, ellipses mean you left something unsaid |
+| 6 | **Emotion needs a curve** | One peak, soft edges. All-shouting equals no emotion at all |
 
 Plus four tone rules: short clauses, 1–3 bubbles per turn, never explain yourself, never use support-desk phrasing. And one that *adds* rather than removes — row 5.
 

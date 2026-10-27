@@ -95,24 +95,41 @@ export function toBubbles(text, opts = {}) {
  * @returns {string[]}
  */
 export function addEmotion(bubbles, opts = {}) {
-  const maxMarks = opts.maxMarks ?? 2;
+  const cap = opts.maxMarks ?? (bubbles.length >= 5 ? 3 : 2);
   const Q_TAIL = /(吗|呢|么|怎么|为什么|为啥|是不是|要不要|行不行|好不好|对不对|对吧|在哪|干嘛|什么)\s*$/;
   const EXCL = /(太.{0,8}了|真的|居然|竟然|原来|好家伙|天哪|我去|糟了|完了|救命)/;
-  let used = 0;
+  const FAREWELL = /^(晚安|拜拜|再见|睡了|去睡|先这样|回聊)/;
+  const SOFT_TAIL = /(吧|啦|呗|哦|嘛|呀)$/;
 
-  return bubbles.map((b, i) => {
-    if (used >= maxMarks) return b;
-    // 已经有情绪标点就到此为止
-    if (/[？！…!?]$/.test(b)) return b;
-
-    // 最后一条通常是收尾（晚安 / 拜拜），别加感叹号
-    const isFarewell = /^(晚安|拜拜|再见|睡了|去睡|先这样|回聊)/.test(b) || /(晚安|拜拜|再见)$/.test(b);
-    if (isFarewell) return b;
-
-    if (Q_TAIL.test(b)) { used++; return b + '？'; }
-    if (EXCL.test(b)) { used++; return b + '！'; }
-    return b;
+  // 第一遍：按线索给出「想要的」标记
+  const marks = bubbles.map((b) => {
+    if (/[？！…!?~～]$/.test(b)) return 'keep';
+    if (FAREWELL.test(b) || /(晚安|拜拜|再见)$/.test(b)) return '~';
+    if (SOFT_TAIL.test(b)) return '~';
+    if (Q_TAIL.test(b)) return '？';
+    if (EXCL.test(b)) return '！';
+    return '';
   });
+
+  // 第二遍：压成一条起伏曲线 —— 一个高音，两头收着
+  const last = bubbles.length - 1;
+  let exported = 0;
+  const out = bubbles.slice();
+  for (let i = 0; i <= last; i++) {
+    let m = marks[i];
+    if (!m) continue;
+    if (exported >= cap) { marks[i] = ''; continue; }
+    if (m === '！') {
+      // 不许连两个 ！，也不许最后一条喊出来
+      const prevBang = i > 0 && marks[i - 1] === '！';
+      if (prevBang || i === last) m = '~';
+    }
+    if (m === 'keep') { marks[i] = 'keep'; continue; }
+    out[i] = bubbles[i] + m;
+    marks[i] = m;
+    exported++;
+  }
+  return out;
 }
 
 function selfTest() {
@@ -123,7 +140,7 @@ function selfTest() {
       expect: [
         '行 那快去睡',
         '别又吞两颗褪黑素硬撑 明天上课直接趴下变小肥鱼',
-        '晚安东哥'
+        '晚安东哥~'
       ]
     },
     {
@@ -152,14 +169,19 @@ function selfTest() {
       expect: ['你昨天说要去跑步', '到底去没去呢？']
     },
     {
-      name: '情绪：感叹线索补 ！',
+      name: '情绪：连续两个感叹被压成起伏',
       input: '这也太离谱了。你居然真的去了',
-      expect: ['这也太离谱了！', '你居然真的去了！']
+      expect: ['这也太离谱了！', '你居然真的去了~']
     },
     {
-      name: '情绪：收尾句不加感叹',
+      name: '情绪：收尾句用 ~ 不用 ！',
       input: '行 那快去睡。晚安',
-      expect: ['行 那快去睡', '晚安']
+      expect: ['行 那快去睡', '晚安~']
+    },
+    {
+      name: '情绪：语气词收尾补 ~',
+      input: '明天我尽量早点起吧',
+      expect: ['明天我尽量早点起吧~']
     },
     {
       name: '情绪：可关闭',
