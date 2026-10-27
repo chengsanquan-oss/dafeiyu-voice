@@ -70,10 +70,49 @@ export function toBubbles(text, opts = {}) {
   }
 
   // 4) 句尾句号去掉
-  return out
+  const cleaned = out
     .map((s) => s.replace(TRAILING_PERIOD, '').trim())
     .filter(Boolean)
     .slice(0, maxBubbles);
+
+  // 5) 情绪标点：按线索词补 ？ 或 ！，默认开，总量受限
+  if (opts.emotion === false) return cleaned;
+  return addEmotion(cleaned, { maxMarks: opts.maxMarks ?? 2 });
+}
+
+/**
+ * 按线索词给气泡补情绪标点。
+ *
+ * 只做两件事，都是**保守的**：
+ *   - 句尾有疑问线索（吗/呢/怎么/为什么/是不是…）且没有终止符 → 补 `？`
+ *   - 句中有感叹线索（太…了/真/居然/竟然…）且没有终止符 → 补 `！`
+ *
+ * 不会用 `…`：省略号是「话没说完」，光靠词猜不出来，乱加比不加更假。
+ * 也不会给它已有的标点再叠一个。
+ *
+ * @param {string[]} bubbles
+ * @param {{maxMarks?: number}} [opts] 整条消息最多补几个，默认 2
+ * @returns {string[]}
+ */
+export function addEmotion(bubbles, opts = {}) {
+  const maxMarks = opts.maxMarks ?? 2;
+  const Q_TAIL = /(吗|呢|么|怎么|为什么|为啥|是不是|要不要|行不行|好不好|对不对|对吧|在哪|干嘛|什么)\s*$/;
+  const EXCL = /(太.{0,8}了|真的|居然|竟然|原来|好家伙|天哪|我去|糟了|完了|救命)/;
+  let used = 0;
+
+  return bubbles.map((b, i) => {
+    if (used >= maxMarks) return b;
+    // 已经有情绪标点就到此为止
+    if (/[？！…!?]$/.test(b)) return b;
+
+    // 最后一条通常是收尾（晚安 / 拜拜），别加感叹号
+    const isFarewell = /^(晚安|拜拜|再见|睡了|去睡|先这样|回聊)/.test(b) || /(晚安|拜拜|再见)$/.test(b);
+    if (isFarewell) return b;
+
+    if (Q_TAIL.test(b)) { used++; return b + '？'; }
+    if (EXCL.test(b)) { used++; return b + '！'; }
+    return b;
+  });
 }
 
 function selfTest() {
@@ -106,13 +145,34 @@ function selfTest() {
       name: '空输入',
       input: '   ',
       expect: []
+    },
+    {
+      name: '情绪：疑问线索补 ？',
+      input: '你昨天说要去跑步。到底去没去呢',
+      expect: ['你昨天说要去跑步', '到底去没去呢？']
+    },
+    {
+      name: '情绪：感叹线索补 ！',
+      input: '这也太离谱了。你居然真的去了',
+      expect: ['这也太离谱了！', '你居然真的去了！']
+    },
+    {
+      name: '情绪：收尾句不加感叹',
+      input: '行 那快去睡。晚安',
+      expect: ['行 那快去睡', '晚安']
+    },
+    {
+      name: '情绪：可关闭',
+      input: '到底去没去呢',
+      opts: { emotion: false },
+      expect: ['到底去没去呢']
     }
   ];
 
   let pass = 0;
   const failures = [];
   for (const c of cases) {
-    const got = toBubbles(c.input);
+    const got = toBubbles(c.input, c.opts ?? {});
     const ok = JSON.stringify(got) === JSON.stringify(c.expect);
     if (ok) { pass++; console.log(`✅ ${c.name}`); }
     else {
@@ -130,7 +190,7 @@ if (args.includes('--self-test')) {
   process.exit(selfTest() ? 0 : 1);
 } else if (args.length) {
   const text = args.filter((a) => !a.startsWith('--')).join(' ');
-  const bubbles = toBubbles(text);
+  const bubbles = toBubbles(text, { emotion: !args.includes('--no-emotion') });
   if (args.includes('--json')) {
     console.log(JSON.stringify(bubbles, null, 2));
   } else {

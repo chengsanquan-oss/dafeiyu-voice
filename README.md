@@ -89,6 +89,8 @@ for (const [i, text] of bubbles.entries()) {
 
 无第三方依赖，Node 18+。
 
+默认还会补情绪标点（疑问线索补 `？`，感叹线索补 `！`，收尾句不加，一条最多两个）；不想要就加 `--no-emotion`。
+
 自测：
 
 ```bash

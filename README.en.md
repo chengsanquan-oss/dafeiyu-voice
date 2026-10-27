@@ -80,6 +80,8 @@ for (const [i, text] of bubbles.entries()) {
 
 No dependencies. Node 18+.
 
+Emotion marks are added by default (question cues → `？`, exclamation cues → `！`, closing lines excluded, max 2 per message). Pass `--no-emotion` to disable.
+
 ```bash
 node scripts/normalize.mjs --self-test   # 5/5 passing
 ```
